@@ -29,40 +29,52 @@
         return value;
       }
 
-      var attributes = ['href', 'src', 'alt', 'title'],
-          allElements = document.body.getElementsByTagName("*");
 
-      for (var i = 0; i < allElements.length; i++) {
-        for (var j = 0; j < attributes.length; j++) {
-          if (allElements[i].hasAttribute('data-bind-' + attributes[j])) {
-            var attributeValue = allElements[i].getAttribute('data-bind-' + attributes[j]),
+      /**
+       * Main function that binds given attributes
+       */
+      function bind() {
+        var attributes = ['href', 'src', 'alt', 'title'],
+            allElements = document.body.getElementsByTagName("*");
+
+        for (var i = 0; i < allElements.length; i++) {
+          for (var j = 0; j < attributes.length; j++) {
+            if (allElements[i].hasAttribute('data-bind-' + attributes[j])) {
+              var attributeValue = allElements[i].getAttribute('data-bind-' + attributes[j]),
+                  modelValue = findValueInModel(attributeValue);
+
+              if(modelValue !== undefined) {
+                allElements[i].setAttribute(attributes[j], modelValue);
+              }
+            }
+          }
+          if(allElements[i].hasAttribute('data-bind')) {
+            var attributeValue = allElements[i].getAttribute('data-bind'),
                 modelValue = findValueInModel(attributeValue);
 
             if(modelValue !== undefined) {
-              allElements[i].setAttribute(attributes[j], modelValue);
+              allElements[i].innerHTML = modelValue;
             }
-          }
-        }
-        if(allElements[i].hasAttribute('data-bind')) {
-          var attributeValue = allElements[i].getAttribute('data-bind'),
-              modelValue = findValueInModel(attributeValue);
-
-          if(modelValue !== undefined) {
-            allElements[i].innerHTML = modelValue;
           }
         }
       }
 
+      /**
+       * Function that observes the model changes
+       */
+      function observeModel() {
+        var currentModel = Object.create(model);
+        setInterval(function(){
+           if(JSON.stringify(currentModel) !== JSON.stringify(model)) {
+             bind();
+             currentModel = Object.create(model);
+           }
+        }, 100);
+      }
+
+      bind();
+      observeModel();
     };
 
     return DataBind;
 }));
-
-var model = {
-  label: "Schibsted",
-  x: {
-    y: {
-      z: "some nested property to bind"
-    }
-  },
-}
