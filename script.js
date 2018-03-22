@@ -63,11 +63,11 @@
        * Function that observes the model changes
        */
       function observeModel() {
-        var currentModel = Object.create(model);
+        var currentModel = Object.assign({}, model);
         setInterval(function(){
            if(JSON.stringify(currentModel) !== JSON.stringify(model)) {
              bind();
-             currentModel = Object.create(model);
+             currentModel = Object.assign({}, model);
            }
         }, 100);
       }
