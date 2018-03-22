@@ -7,8 +7,15 @@
         root.DataBind = factory();
     }
 }(typeof this === 'undefined' ? window : this, function () {
+  /**
+   * DataBind module that binds value from model to HTML attribute
+   * @param {object} model - The model data
+   */
     var DataBind = function(model) {
-
+      /**
+       * Function that returns the value from the model
+       * @param {string} key - The value of HTML attribute
+       */
       function findValueInModel(key) {
         var splittedKey = key.split("."),
             value = model,
