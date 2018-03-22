@@ -19,7 +19,7 @@
           i++;
         }
 
-        return value ? value : "";
+        return value;
       }
 
       var attributes = ['href', 'src', 'alt', 'title'],
@@ -30,12 +30,17 @@
           if (allElements[i].hasAttribute('data-bind-' + attributes[j])) {
             var attributeValue = allElements[i].getAttribute('data-bind-' + attributes[j]),
                 modelValue = findValueInModel(attributeValue);
-            allElements[i].setAttribute(attributes[j], modelValue);
-          }
 
-          if(allElements[i].hasAttribute('data-bind')) {
-            var attributeValue = allElements[i].getAttribute('data-bind'),
-                modelValue = findValueInModel(attributeValue);
+            if(modelValue !== undefined) {
+              allElements[i].setAttribute(attributes[j], modelValue);
+            }
+          }
+        }
+        if(allElements[i].hasAttribute('data-bind')) {
+          var attributeValue = allElements[i].getAttribute('data-bind'),
+              modelValue = findValueInModel(attributeValue);
+
+          if(modelValue !== undefined) {
             allElements[i].innerHTML = modelValue;
           }
         }
